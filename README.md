@@ -1,120 +1,85 @@
-# MathMaster 10
+# 🧮 MathMaster
 
-Aplicacion web educativa en PHP para practicar sumas mediante retos interactivos con fichas arrastrables.
+> [!IMPORTANT]
+> **Proyecto Educativo:** Esta aplicación ha sido desarrollada como parte del programa académico del **Grupo 10**. Su objetivo es facilitar el aprendizaje de sumas de alta complejidad (6 dígitos) para niños de primaria.
 
-## Caracteristicas
+Aplicación web interactiva construida en PHP que transforma la práctica matemática en un torneo de fútbol, utilizando una interfaz *Drag & Drop* para resolver desafíos.
 
-- Registro e inicio de sesion de usuarios.
-- Tablero de retos por serie de ejercicios.
-- Ejercicios de suma con interfaz drag-and-drop.
-- Guardado de progreso por ejercicio (`pendiente`, `incorrecto`, `resuelto`).
-- Sistema de puntaje acumulado por usuario.
+---
 
-## Tecnologias
+## 🚀 Características Principales
 
-- PHP (sin framework)
-- MySQL/MariaDB (via PDO)
-- HTML, CSS y JavaScript vanilla
+* **Sistema de Torneos:** Tablero de retos organizado por series de dificultad.
+* **Interfaz Dinámica:** Mecánica de "arrastrar y soltar" fichas numéricas.
+* **Gestión de Usuarios:** Registro seguro con migración automática de seguridad.
+* **Seguimiento en Vivo:** Persistencia del estado de los ejercicios (`pendiente`, `incorrecto`, `resuelto`).
+* **Gamificación:** Sistema de puntos acumulados por cada ejercicio resuelto.
 
-## Estructura del proyecto
+---
 
-- `login.php`: autenticacion y migracion automatica de contrasenas en texto plano a hash.
-- `registro.php`: creacion de usuarios.
-- `logout.php`: cierre de sesion.
-- `index.php`: panel principal de retos (serie base).
-- `sumas_2dig.php`: segundo panel de retos (serie adicional).
-- `ejercicio.php`: vista y logica de un reto individual.
-- `logica_guardado.php`: endpoint JSON para guardar estado del reto.
-- `ejercicios_lib.php`: funciones compartidas para generacion y reinicio de ejercicios.
-- `db.php`: conexion a base de datos mediante PDO.
-- `grup_grupo10proyecto.sql`: esquema SQL y datos de ejemplo.
-- `guardar.php`: endpoint legacy para sumar puntos (no es el flujo principal actual).
+## 🛠️ Tecnologías Utilizadas
 
-## Requisitos
+* **Backend:** PHP 8.0+ (Vanilla)
+* **Base de Datos:** MySQL / MariaDB mediante **PDO**.
+* **Frontend:** HTML5, CSS3 (Animaciones personalizadas) y JavaScript Vanilla.
 
-- PHP 8.0 o superior.
-- MySQL o MariaDB.
-- Servidor web local (por ejemplo XAMPP, Laragon, WAMP o Apache/Nginx + PHP).
+---
 
-## Instalacion y puesta en marcha
+## 📁 Estructura del Proyecto
 
-1. Clona o descarga el proyecto.
-2. Crea una base de datos llamada `grup_grupo10proyecto`.
-3. Importa el archivo `grup_grupo10proyecto.sql`.
-4. Revisa credenciales en `db.php` y ajustalas a tu entorno si hace falta.
-5. Coloca la carpeta del proyecto en el directorio publico de tu servidor local.
-6. Abre en el navegador:
-   - `http://localhost/miuni/login.php` (ruta tipica en entorno local)
+A continuación se detallan los archivos clave del sistema:
 
-## Flujo de uso
+| Archivo | Función |
+| :--- | :--- |
+| `index.php` | **Dashboard:** Panel principal de retos (Vista de Estadio). |
+| `ejercicio.php` | **Ejercicios:** Interfaz para resolver la suma. |
+| `db.php` | Conexión segura a la base de datos. |
+| `logica_guardado.php` | API interna que gestiona el progreso mediante JSON. |
+| `login.php` / `registro.php` | Gestión de acceso y seguridad de cuentas. |
 
-1. Registrarse en `registro.php`.
-2. Iniciar sesion en `login.php`.
-3. Entrar al panel de retos (`index.php` o `sumas_2dig.php`).
-4. Abrir un ejercicio, ordenar fichas y verificar resultado.
-5. Al acertar:
-   - Se marca el reto como `resuelto`.
-   - Se suma 1 punto al usuario.
-6. Al fallar:
-   - Se marca el reto como `incorrecto` para reintento.
+---
 
-## Modelo de datos (resumen)
+## ⚙️ Instalación y Configuración
 
-### `usuarios`
+> [!TIP]
+> Para una mejor experiencia de desarrollo, se recomienda utilizar **VS Code** junto con un servidor local como **XAMPP** o **Laragon**.
 
-- `id`
-- `nombre_usuario` (unico)
-- `password`
-- `puntos_totales`
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone [https://github.com/tavoidkk/MathMaster.git](https://github.com/tu-usuario/MathMaster.git)
+    ```
+2.  **Configurar la Base de Datos:**
+    * Crea una base de datos llamada `grup_grupo10proyecto`.
+    * Importa el archivo `grup_grupo10proyecto.sql` proporcionado en la raíz.
+3.  **Ajustar Credenciales:**
+    * Edita `db.php` con tus datos locales (usuario `root` por defecto en XAMPP).
 
-### `progreso_ejercicios`
+> [!WARNING]
+> **Seguridad:** Asegúrate de que el archivo `db.php` esté incluido en tu `.gitignore` antes de realizar despliegues en servidores públicos para proteger tus credenciales.
 
-- `id`
-- `usuario_id` (FK -> `usuarios.id`)
-- `ejercicio_n`
-- `tipo` (por ejemplo `6d`, `6d2`, `2d`)
-- `num1`, `num2`
-- `estado` (`pendiente`, `incorrecto`, `resuelto`)
+---
 
-### `progreso`
+## 🔄 Flujo de Usuario
 
-Tabla historica incluida en el SQL, no es el eje principal del flujo actual.
+1.  **Entrada:** El usuario se registra e inicia sesión.
+2.  **Selección:** En el panel principal, elige un "Reto" disponible.
+3.  **Juego:** Arrastra los números a las casillas de resultado.
+4.  **Validación:**
+    * **¡Correcto!:** Si es correcto, el estado cambia a `resuelto` y se suma un punto.
+    * **IIncorrecto :(:** Si es incorrecto, se marca como tal para permitir el reintento.
 
-## API interna
+---
 
-### POST `logica_guardado.php`
+## 🛡️ Notas Técnicas y Seguridad
 
-- Content-Type: `application/json`
-- Body esperado:
+> [!NOTE]
+> **Migración de Hash:** El sistema cuenta con una lógica en `login.php` que detecta contraseñas en texto plano y las actualiza automáticamente a `password_hash()` de PHP en el primer inicio de sesión exitoso.
 
-```json
-{
-  "ejercicio_n": 1,
-  "tipo": "6d",
-  "accion": "resolver"
-}
-```
+* **Consultas Preparadas:** Protección total contra Inyecciones SQL mediante el uso exclusivo de `prepare()` y `execute()` de PDO.
+* **API Local:** La comunicación entre el juego y la base de datos se realiza de forma asíncrona mediante `fetch()` para evitar recargas de página innecesarias.
 
-- `accion` opcional:
-  - `resolver` (por defecto): marca resuelto y suma punto.
-  - `incorrecto`: marca para reintento.
+---
 
-Respuesta JSON con `status` (`success` o `error`) y `message`.
+## ✒️ Autores
 
-## Seguridad y notas tecnicas
-
-- Se usan consultas preparadas PDO para evitar inyecciones SQL.
-- `login.php` migra automaticamente contrasenas antiguas en texto plano a hash en el primer login exitoso.
-- Actualmente `db.php` contiene credenciales embebidas; se recomienda moverlas a variables de entorno para produccion.
-
-## Mejoras recomendadas
-
-- Mover configuracion sensible a `.env`.
-- Agregar validaciones de entrada mas estrictas (rangos y tipos).
-- Incluir CSRF token en formularios y endpoints.
-- Separar estilos/JS en archivos estaticos.
-- Agregar pruebas basicas del flujo de autenticacion y progreso.
-
-## Licencia
-
-No definida en el repositorio.
+* **Gustavo Vidal** 
